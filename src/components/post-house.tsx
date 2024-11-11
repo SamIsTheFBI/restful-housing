@@ -42,7 +42,7 @@ export default function PostHouse() {
           <DialogHeader>
             <DialogTitle>Enter Housing Details</DialogTitle>
             <DialogDescription>
-              Add details of your property you want to put on sale. Click save when you're done.
+              Add details of your property you want to put on sale. Click save when you&apos;re done.
             </DialogDescription>
           </DialogHeader>
           <HouseForm />
@@ -60,7 +60,7 @@ export default function PostHouse() {
         <DrawerHeader className="text-left">
           <DrawerTitle>Enter Housing Details</DrawerTitle>
           <DrawerDescription>
-            Add details of your property you want to put on sale. Click save when you're done.
+            Add details of your property you want to put on sale. Click save when you&apos;re done.
           </DrawerDescription>
         </DrawerHeader>
         <HouseForm className="px-4" />
