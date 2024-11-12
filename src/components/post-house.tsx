@@ -28,9 +28,274 @@ import { HousePlusIcon, IndianRupeeIcon } from "lucide-react"
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group"
 import { Label } from "./ui/label"
 
+import { zodResolver } from "@hookform/resolvers/zod"
+import { useForm } from "react-hook-form"
+import { z } from "zod"
+import {
+  Form,
+  FormControl,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from "@/components/ui/form"
+
 export default function PostHouse() {
   const [open, setOpen] = React.useState(false)
   const isDesktop = useMediaQuery("(min-width: 768px)")
+
+  const formSchema = z.object({
+    name: z.string().min(2),
+    type: z.enum(["independent", "flat", "duplex", "studio"], { required_error: "You must select an option", }),
+    area: z.string().min(2),
+    city: z.string().min(2),
+    state: z.string().min(2),
+    country: z.string().min(2),
+    pricing: z.string().min(2),
+    negotiable: z.enum(["yes", "maybe", "no"], { required_error: "You must select an option", }),
+    status: z.enum(["active", "inactive"], { required_error: "You must select an option", }),
+  })
+
+  function onSubmit(values: z.infer<typeof formSchema>) {
+    console.log(values)
+  }
+
+  function HouseForm({ className }: React.ComponentProps<"form">) {
+    const form = useForm<z.infer<typeof formSchema>>({
+      resolver: zodResolver(formSchema),
+      defaultValues: {
+        name: "",
+        area: "",
+        city: "",
+        state: "",
+        country: "",
+        pricing: "",
+      },
+    })
+    return (
+      <Form {...form}>
+        <form className={cn("grid items-start gap-4 max-lg:max-h-[calc(100dvh-15rem)] max-lg:overflow-y-scroll", className)}>
+          <FormField
+            control={form.control}
+            name="name"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Property Name</FormLabel>
+                <FormControl>
+                  <Input placeholder="Jeevan Villa" {...field} />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+          <div className="flex gap-3 flex-wrap">
+            <span className="text-sm">Property Type: </span>
+            <FormField
+              control={form.control}
+              name="type"
+              render={({ field }) => (
+                <FormItem>
+                  <FormControl>
+                    <RadioGroup
+                      onValueChange={field.onChange}
+                      defaultValue={field.value}
+                      className="inline-flex"
+                    >
+                      <FormItem className="flex items-center space-x-3 space-y-0">
+                        <FormControl>
+                          <RadioGroupItem value="independent" />
+                        </FormControl>
+                        <FormLabel className="text-sm">
+                          Independent
+                        </FormLabel>
+                      </FormItem>
+                      <FormItem className="flex items-center space-x-3 space-y-0">
+                        <FormControl>
+                          <RadioGroupItem value="flat" />
+                        </FormControl>
+                        <FormLabel className="text-sm">
+                          Flat
+                        </FormLabel>
+                      </FormItem>
+                      <FormItem className="flex items-center space-x-3 space-y-0">
+                        <FormControl>
+                          <RadioGroupItem value="duplex" />
+                        </FormControl>
+                        <FormLabel className="text-sm">
+                          Duplex
+                        </FormLabel>
+                      </FormItem>
+                      <FormItem className="flex items-center space-x-3 space-y-0">
+                        <FormControl>
+                          <RadioGroupItem value="studio" />
+                        </FormControl>
+                        <FormLabel className="text-sm">
+                          Studio
+                        </FormLabel>
+                      </FormItem>
+                    </RadioGroup>
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+          </div>
+          Address
+          <div className="flex gap-4">
+            <FormField
+              control={form.control}
+              name="area"
+              render={({ field }) => (
+                <FormItem>
+                  <FormControl>
+                    <Input placeholder="Area" {...field} />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+            <FormField
+              control={form.control}
+              name="city"
+              render={({ field }) => (
+                <FormItem>
+                  <FormControl>
+                    <Input placeholder="City" {...field} />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+          </div>
+          <div className="flex gap-4">
+            <FormField
+              control={form.control}
+              name="state"
+              render={({ field }) => (
+                <FormItem>
+                  <FormControl>
+                    <Input placeholder="State" {...field} />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+            <FormField
+              control={form.control}
+              name="country"
+              render={({ field }) => (
+                <FormItem>
+                  <FormControl>
+                    <Input placeholder="Country" {...field} />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+
+          </div>
+          <div className="flex w-full items-center gap-4">
+            <FormField
+              control={form.control}
+              name="pricing"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Pricing</FormLabel>
+                  <FormControl>
+                    <div className="relative inline-flex pl-5">
+                      <IndianRupeeIcon className="absolute text-muted-foreground  pt-3" />
+                      <Input type="number" className="pl-5 w-full" {...field} />
+                    </div>
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+
+          </div>
+          <div className="flex gap-3 flex-wrap items-center">
+            <span className="text-sm">Negotiable? </span>
+            <FormField
+              control={form.control}
+              name="negotiable"
+              render={({ field }) => (
+                <FormItem>
+                  <FormControl>
+                    <RadioGroup
+                      onValueChange={field.onChange}
+                      defaultValue={field.value}
+                      className="inline-flex"
+                    >
+                      <FormItem className="flex items-center space-x-3 space-y-0">
+                        <FormControl>
+                          <RadioGroupItem value="yes" />
+                        </FormControl>
+                        <FormLabel className="text-sm">
+                          Yes
+                        </FormLabel>
+                      </FormItem>
+                      <FormItem className="flex items-center space-x-3 space-y-0">
+                        <FormControl>
+                          <RadioGroupItem value="maybe" />
+                        </FormControl>
+                        <FormLabel className="text-sm">
+                          Maybe
+                        </FormLabel>
+                      </FormItem>
+                      <FormItem className="flex items-center space-x-3 space-y-0">
+                        <FormControl>
+                          <RadioGroupItem value="no" />
+                        </FormControl>
+                        <FormLabel className="text-sm">
+                          No
+                        </FormLabel>
+                      </FormItem>
+                    </RadioGroup>
+                  </FormControl>
+                </FormItem>
+              )}
+            />
+          </div>
+          <div className="flex gap-3 flex-wrap items-center">
+            <span className="text-sm">Status</span>
+            <FormField
+              control={form.control}
+              name="status"
+              render={({ field }) => (
+                <FormItem>
+                  <FormControl>
+                    <RadioGroup
+                      onValueChange={field.onChange}
+                      defaultValue={field.value}
+                      className="inline-flex"
+                    >
+                      <FormItem className="flex items-center space-x-3 space-y-0">
+                        <FormControl>
+                          <RadioGroupItem value="active" />
+                        </FormControl>
+                        <FormLabel className="text-sm">
+                          Active
+                        </FormLabel>
+                      </FormItem>
+                      <FormItem className="flex items-center space-x-3 space-y-0">
+                        <FormControl>
+                          <RadioGroupItem value="inactive" />
+                        </FormControl>
+                        <FormLabel className="text-sm">
+                          Inactive
+                        </FormLabel>
+                      </FormItem>
+                    </RadioGroup>
+                  </FormControl>
+                </FormItem>
+              )}
+            />
+          </div>
+          <Button type="button" onClick={form.handleSubmit(onSubmit)}>Confirm property details <HousePlusIcon /></Button>
+        </form>
+      </Form>
+    )
+  }
 
   if (isDesktop) {
     return (
@@ -71,80 +336,5 @@ export default function PostHouse() {
         </DrawerFooter>
       </DrawerContent>
     </Drawer>
-  )
-}
-
-function HouseForm({ className }: React.ComponentProps<"form">) {
-  return (
-    <form className={cn("grid items-start gap-4 max-lg:max-h-[calc(100dvh-15rem)] max-lg:overflow-y-scroll", className)}>
-      Property Details
-      <div className="grid gap-2">
-        <Input type="text" id="property-name" placeholder="Property Name" />
-      </div>
-      <div className="flex gap-3">
-        <span>Property Type: </span>
-        <RadioGroup defaultValue="option-one" className="inline-flex">
-          <div className="flex items-center space-x-2">
-            <RadioGroupItem value="yes" id="yes" />
-            <Label htmlFor="yes">Yes</Label>
-          </div>
-          <div className="flex items-center space-x-2">
-            <RadioGroupItem value="maybe" id="maybe" />
-            <Label htmlFor="maybe">Maybe</Label>
-          </div>
-          <div className="flex items-center space-x-2">
-            <RadioGroupItem value="no" id="no" />
-            <Label htmlFor="no">No</Label>
-          </div>
-        </RadioGroup>
-      </div>
-      Address
-      <div className="flex gap-4">
-        <Input id="area" placeholder="Area" />
-        <Input id="city" placeholder="City" />
-      </div>
-      <div className="flex gap-4">
-        <Input id="state" placeholder="State" />
-        <Input id="country" placeholder="Country" />
-      </div>
-      <div className="flex w-full items-center gap-4">
-        Pricing
-        <div className="relative">
-          <IndianRupeeIcon className="absolute text-muted-foreground  pt-3" />
-          <Input type="number" className="pl-5 w-full" />
-        </div>
-      </div>
-      <div className="flex gap-3">
-        <span>Negotiable? </span>
-        <RadioGroup defaultValue="option-one" className="inline-flex">
-          <div className="flex items-center space-x-2">
-            <RadioGroupItem value="yes" id="yes" />
-            <Label htmlFor="yes">Yes</Label>
-          </div>
-          <div className="flex items-center space-x-2">
-            <RadioGroupItem value="maybe" id="maybe" />
-            <Label htmlFor="maybe">Maybe</Label>
-          </div>
-          <div className="flex items-center space-x-2">
-            <RadioGroupItem value="no" id="no" />
-            <Label htmlFor="no">No</Label>
-          </div>
-        </RadioGroup>
-      </div>
-      <div className="flex gap-3">
-        <span>Status</span>
-        <RadioGroup defaultValue="option-one" className="inline-flex">
-          <div className="flex items-center space-x-2">
-            <RadioGroupItem value="active" id="active" />
-            <Label htmlFor="active">Active</Label>
-          </div>
-          <div className="flex items-center space-x-2">
-            <RadioGroupItem value="inactive" id="inactive" />
-            <Label htmlFor="inactive">Inactive</Label>
-          </div>
-        </RadioGroup>
-      </div>
-      <Button type="submit">Confirm property details <HousePlusIcon /></Button>
-    </form>
   )
 }
