@@ -8,6 +8,7 @@ export const statusEnum = pgEnum('status', ['active', 'inactive'])
 export const house = pgTable("house", {
   id: uuid("id").primaryKey(),
   houseType: houseTypeEnum(),
+  houseName: text("house_name").notNull(),
   city: text("city").notNull(),
   area: text("area").notNull(),
   state: text("state").notNull(),
