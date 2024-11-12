@@ -6,7 +6,7 @@ import { Search } from "lucide-react"
 
 export default function Home() {
   return (
-    <main className="max-w-2xl px-6 space-y-8 mx-auto mt-8 xl:mt-16 font-[family-name:var(--font-geist-sans)] text-zinc-700">
+    <main className="max-w-2xl px-6 space-y-8 mx-auto pt-8 xl:pt-16 font-[family-name:var(--font-geist-sans)] text-zinc-700">
       <div className="mx-auto w-fit">
         <ProfileUpdate />
       </div>

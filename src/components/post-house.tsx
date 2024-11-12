@@ -26,7 +26,6 @@ import { Input } from "@/components/ui/input"
 import { useMediaQuery } from "usehooks-ts"
 import { HousePlusIcon, IndianRupeeIcon } from "lucide-react"
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group"
-import { Label } from "./ui/label"
 
 import { zodResolver } from "@hookform/resolvers/zod"
 import { useForm } from "react-hook-form"
@@ -44,20 +43,65 @@ export default function PostHouse() {
   const [open, setOpen] = React.useState(false)
   const isDesktop = useMediaQuery("(min-width: 768px)")
 
+  const typeValues = ["independent", "flat", "duplex", "studio"] as const
+  const negotiableValues = ["yes", "maybe", "no"] as const
+  const statusValues = ["active", "inactive"] as const
+
   const formSchema = z.object({
     name: z.string().min(2),
-    type: z.enum(["independent", "flat", "duplex", "studio"], { required_error: "You must select an option", }),
+    type: z.enum(typeValues, { required_error: "You must select an option", }),
     area: z.string().min(2),
     city: z.string().min(2),
     state: z.string().min(2),
     country: z.string().min(2),
     pricing: z.string().min(2),
-    negotiable: z.enum(["yes", "maybe", "no"], { required_error: "You must select an option", }),
-    status: z.enum(["active", "inactive"], { required_error: "You must select an option", }),
+    negotiable: z.enum(negotiableValues, { required_error: "You must select an option", }),
+    status: z.enum(statusValues, { required_error: "You must select an option", }),
   })
 
   function onSubmit(values: z.infer<typeof formSchema>) {
-    console.log(values)
+    if (
+      !(localStorage.getItem("restful_name") &&
+        localStorage.getItem("restful_address") &&
+        localStorage.getItem("restful_email") &&
+        localStorage.getItem("restful_phone")
+      )
+    ) {
+      console.log("update your profile first!")
+      return
+    }
+
+    const postHouseObj = {
+      house_type: values.type,
+      address: {
+        city: values.city,
+        area: values.area,
+        state: values.state,
+        country: values.country
+      },
+      price: values.pricing,
+      negotiable: values.negotiable,
+      owner_details: {
+        name: localStorage.getItem("restful_name"),
+        address: localStorage.getItem("restful_address"),
+        email: localStorage.getItem("restful_email"),
+        phone: localStorage.getItem("restful_phone")
+      },
+      status: values.status,
+    }
+
+    try {
+      fetch("http://localhost:3000/api/house", {
+        method: "POST",
+        body: JSON.stringify(postHouseObj),
+        headers: {
+          "Content-type": "application/json; charset=UTF-8"
+        }
+      }).then((res) => res.json()).then((json) => console.log(json))
+
+    } catch (e) {
+      console.error(e)
+    }
   }
 
   function HouseForm({ className }: React.ComponentProps<"form">) {
@@ -74,7 +118,7 @@ export default function PostHouse() {
     })
     return (
       <Form {...form}>
-        <form className={cn("grid items-start gap-4 max-lg:max-h-[calc(100dvh-15rem)] max-lg:overflow-y-scroll", className)}>
+        <form className={cn("grid items-start gap-4 max-lg:max-h-[calc(100dvh-15rem)] max-sm:overflow-y-scroll", className)}>
           <FormField
             control={form.control}
             name="name"
@@ -101,38 +145,16 @@ export default function PostHouse() {
                       defaultValue={field.value}
                       className="inline-flex"
                     >
-                      <FormItem className="flex items-center space-x-3 space-y-0">
-                        <FormControl>
-                          <RadioGroupItem value="independent" />
-                        </FormControl>
-                        <FormLabel className="text-sm">
-                          Independent
-                        </FormLabel>
-                      </FormItem>
-                      <FormItem className="flex items-center space-x-3 space-y-0">
-                        <FormControl>
-                          <RadioGroupItem value="flat" />
-                        </FormControl>
-                        <FormLabel className="text-sm">
-                          Flat
-                        </FormLabel>
-                      </FormItem>
-                      <FormItem className="flex items-center space-x-3 space-y-0">
-                        <FormControl>
-                          <RadioGroupItem value="duplex" />
-                        </FormControl>
-                        <FormLabel className="text-sm">
-                          Duplex
-                        </FormLabel>
-                      </FormItem>
-                      <FormItem className="flex items-center space-x-3 space-y-0">
-                        <FormControl>
-                          <RadioGroupItem value="studio" />
-                        </FormControl>
-                        <FormLabel className="text-sm">
-                          Studio
-                        </FormLabel>
-                      </FormItem>
+                      {typeValues.map((value, idx) => (
+                        <FormItem className="flex items-center space-x-3 space-y-0" key={idx}>
+                          <FormControl>
+                            <RadioGroupItem value={value} />
+                          </FormControl>
+                          <FormLabel className="text-sm capitalize">
+                            {value}
+                          </FormLabel>
+                        </FormItem>
+                      ))}
                     </RadioGroup>
                   </FormControl>
                   <FormMessage />
@@ -211,9 +233,8 @@ export default function PostHouse() {
                 </FormItem>
               )}
             />
-
           </div>
-          <div className="flex gap-3 flex-wrap items-center">
+          <div className="flex gap-3 flex-wrap">
             <span className="text-sm">Negotiable? </span>
             <FormField
               control={form.control}
@@ -226,37 +247,23 @@ export default function PostHouse() {
                       defaultValue={field.value}
                       className="inline-flex"
                     >
-                      <FormItem className="flex items-center space-x-3 space-y-0">
-                        <FormControl>
-                          <RadioGroupItem value="yes" />
-                        </FormControl>
-                        <FormLabel className="text-sm">
-                          Yes
-                        </FormLabel>
-                      </FormItem>
-                      <FormItem className="flex items-center space-x-3 space-y-0">
-                        <FormControl>
-                          <RadioGroupItem value="maybe" />
-                        </FormControl>
-                        <FormLabel className="text-sm">
-                          Maybe
-                        </FormLabel>
-                      </FormItem>
-                      <FormItem className="flex items-center space-x-3 space-y-0">
-                        <FormControl>
-                          <RadioGroupItem value="no" />
-                        </FormControl>
-                        <FormLabel className="text-sm">
-                          No
-                        </FormLabel>
-                      </FormItem>
+                      {negotiableValues.map((value, idx) => (
+                        <FormItem className="flex items-center space-x-3 space-y-0" key={idx}>
+                          <FormControl>
+                            <RadioGroupItem value={value} />
+                          </FormControl>
+                          <FormLabel className="text-sm capitalize">
+                            {value}
+                          </FormLabel>
+                        </FormItem>
+                      ))}
                     </RadioGroup>
                   </FormControl>
                 </FormItem>
               )}
             />
           </div>
-          <div className="flex gap-3 flex-wrap items-center">
+          <div className="flex gap-3 flex-wrap">
             <span className="text-sm">Status</span>
             <FormField
               control={form.control}
@@ -269,22 +276,16 @@ export default function PostHouse() {
                       defaultValue={field.value}
                       className="inline-flex"
                     >
-                      <FormItem className="flex items-center space-x-3 space-y-0">
-                        <FormControl>
-                          <RadioGroupItem value="active" />
-                        </FormControl>
-                        <FormLabel className="text-sm">
-                          Active
-                        </FormLabel>
-                      </FormItem>
-                      <FormItem className="flex items-center space-x-3 space-y-0">
-                        <FormControl>
-                          <RadioGroupItem value="inactive" />
-                        </FormControl>
-                        <FormLabel className="text-sm">
-                          Inactive
-                        </FormLabel>
-                      </FormItem>
+                      {statusValues.map((value, idx) => (
+                        <FormItem className="flex items-center space-x-3 space-y-0" key={idx}>
+                          <FormControl>
+                            <RadioGroupItem value={value} />
+                          </FormControl>
+                          <FormLabel className="text-sm capitalize">
+                            {value}
+                          </FormLabel>
+                        </FormItem>
+                      ))}
                     </RadioGroup>
                   </FormControl>
                 </FormItem>
