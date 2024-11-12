@@ -16,7 +16,7 @@ export const house = pgTable("house", {
   price: numeric("price").notNull(),
   negotiable: negotiableEnum(),
   status: statusEnum(),
-  ownerId: uuid("owner_id").notNull().references(() => owner.id, { onDelete: 'cascade' })
+  ownerPhone: numeric("owner_phone").notNull().references(() => owner.phone, { onDelete: 'cascade' })
 })
 
 export type SelectBlogs = typeof house.$inferSelect
