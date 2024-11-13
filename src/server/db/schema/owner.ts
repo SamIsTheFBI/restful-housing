@@ -1,4 +1,4 @@
-import { numeric, pgTable, text, uuid } from "drizzle-orm/pg-core";
+import { numeric, pgTable, text } from "drizzle-orm/pg-core";
 
 export const owner = pgTable("owner", {
   name: text("name").notNull(),

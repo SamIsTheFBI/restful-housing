@@ -1,10 +1,14 @@
 import PostHouse from "@/components/post-house";
 import { ProfileUpdate } from "@/components/profile-update";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Search } from "lucide-react"
+import SearchResults from "@/components/search-results";
 
-export default async function Home() {
+export default async function Home({
+  searchParams
+}: {
+  searchParams: { [key: string]: string | undefined }
+}) {
+  const query = searchParams.query
+
   return (
     <main className="max-w-2xl px-6 space-y-8 mx-auto pt-8 xl:pt-16 font-[family-name:var(--font-geist-sans)] text-zinc-700 dark:text-zinc-300">
       <div className="mx-auto w-fit">
@@ -25,10 +29,7 @@ export default async function Home() {
           </span>
         </div>
       </div>
-      <div className="flex w-full max-w-sm items-center space-x-2 mx-auto">
-        <Input type="text" placeholder="Look for houses near you" />
-        <Button type="button"><Search /></Button>
-      </div>
+      <SearchResults query={query ?? ''} />
     </main>
   );
 }
