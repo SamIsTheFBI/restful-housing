@@ -72,6 +72,7 @@ export default function PostHouse() {
     }
 
     const postHouseObj = {
+      house_name: values.name,
       house_type: values.type,
       address: {
         city: values.city,
@@ -97,7 +98,14 @@ export default function PostHouse() {
         headers: {
           "Content-type": "application/json; charset=UTF-8"
         }
-      }).then((res) => res.json()).then((json) => console.log(json))
+      })
+        .then((res) => res.json())
+        .then((json) => {
+          console.log(json)
+          if (json.success) {
+            setOpen(false)
+          }
+        })
 
     } catch (e) {
       console.error(e)

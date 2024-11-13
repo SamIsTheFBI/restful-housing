@@ -6,7 +6,7 @@ export const negotiableEnum = pgEnum('negotiable', ['yes', 'maybe', 'no'])
 export const statusEnum = pgEnum('status', ['active', 'inactive'])
 
 export const house = pgTable("house", {
-  id: uuid("id").primaryKey(),
+  id: uuid("id").primaryKey().defaultRandom(),
   houseType: houseTypeEnum(),
   houseName: text("house_name").notNull(),
   city: text("city").notNull(),
@@ -19,5 +19,5 @@ export const house = pgTable("house", {
   ownerPhone: numeric("owner_phone").notNull().references(() => owner.phone, { onDelete: 'cascade' })
 })
 
-export type SelectBlogs = typeof house.$inferSelect
-export type InsertBlogs = typeof house.$inferInsert
+export type SelectHouse = typeof house.$inferSelect
+export type InsertHouse = typeof house.$inferInsert

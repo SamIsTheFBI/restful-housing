@@ -6,3 +6,6 @@ export const owner = pgTable("owner", {
   email: text("email").notNull(),
   phone: numeric("phone").notNull().primaryKey(),
 })
+
+export type SelectOwner = typeof owner.$inferSelect
+export type InsertOwner = typeof owner.$inferInsert
