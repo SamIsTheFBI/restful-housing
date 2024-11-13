@@ -6,11 +6,12 @@ import { Input } from "@/components/ui/input";
 import { Search } from "lucide-react"
 import Form from "next/form";
 
-export default async function Home({
-  searchParams
-}: {
-  searchParams: { [key: string]: string | undefined }
+type SearchParams = Promise<{ [key: string]: string | undefined }>
+
+export default async function Home(props: {
+  searchParams: SearchParams
 }) {
+  const searchParams = await props.searchParams
   const query = searchParams.query
 
   return (
