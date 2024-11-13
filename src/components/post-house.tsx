@@ -95,7 +95,7 @@ export default function PostHouse() {
     }
 
     try {
-      fetch(`${process.env.BASE_URL}/api/house`, {
+      fetch("/api/house", {
         method: "POST",
         body: JSON.stringify(postHouseObj),
         headers: {
@@ -108,6 +108,8 @@ export default function PostHouse() {
           if (json.success) {
             toast.success("Successfully uploaded!")
             setOpen(false)
+          } else {
+            toast.error("An error occurred")
           }
         })
 
