@@ -4,7 +4,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Search } from "lucide-react"
 
-export default function Home() {
+export default async function Home() {
   return (
     <main className="max-w-2xl px-6 space-y-8 mx-auto pt-8 xl:pt-16 font-[family-name:var(--font-geist-sans)] text-zinc-700 dark:text-zinc-300">
       <div className="mx-auto w-fit">
@@ -27,7 +27,7 @@ export default function Home() {
       </div>
       <div className="flex w-full max-w-sm items-center space-x-2 mx-auto">
         <Input type="text" placeholder="Look for houses near you" />
-        <Button type="submit"><Search /></Button>
+        <Button type="button"><Search /></Button>
       </div>
     </main>
   );
