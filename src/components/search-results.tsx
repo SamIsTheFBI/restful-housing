@@ -12,7 +12,7 @@ export default async function SearchResults({ query }: { query: string }) {
   if (query === '') return <></>
 
   let result: SelectHouse[] = []
-  const res = await fetch(`http://localhost:3000/api/house/search?query=${query}`, { method: 'GET' })
+  const res = await fetch(`${process.env.BASE_URL}/api/house/search?query=${query}`, { method: 'GET' })
   if (res.ok) {
     const newRes = await res.json()
     result = newRes.result

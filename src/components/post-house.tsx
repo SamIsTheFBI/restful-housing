@@ -38,6 +38,7 @@ import {
   FormLabel,
   FormMessage,
 } from "@/components/ui/form"
+import { toast } from "sonner"
 
 export default function PostHouse() {
   const [open, setOpen] = React.useState(false)
@@ -67,6 +68,8 @@ export default function PostHouse() {
         localStorage.getItem("restful_phone")
       )
     ) {
+      toast.error("Update your profile first!")
+      setOpen(false)
       console.log("update your profile first!")
       return
     }
@@ -92,7 +95,7 @@ export default function PostHouse() {
     }
 
     try {
-      fetch("http://localhost:3000/api/house", {
+      fetch(`${process.env.BASE_URL}/api/house`, {
         method: "POST",
         body: JSON.stringify(postHouseObj),
         headers: {
@@ -103,6 +106,7 @@ export default function PostHouse() {
         .then((json) => {
           console.log(json)
           if (json.success) {
+            toast.success("Successfully uploaded!")
             setOpen(false)
           }
         })
